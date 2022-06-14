@@ -1,0 +1,93 @@
+.layout {
+    display: flex;
+    min-height: 100vh;
+    height: 100%;
+    background-color: rgb(20, 20, 20);
+}
+
+.sidebar {
+    width: 20rem;
+    padding: 2rem 1rem;
+    z-index: 10;
+    height: 100%;
+}
+
+.sidebarButton {
+    display: none;
+}
+
+.main {
+    flex: 1 0 auto;
+    overflow: scroll;
+    width: calc(100% - 20rem);
+    padding: 2rem 1rem 2rem 0;
+}
+
+.resetLink {
+    text-decoration: none;
+    color: inherit;
+}
+
+@media (max-width: 1024px) {
+    .sidebar {
+        top: 0;
+        left: -10rem;
+        position: fixed;
+        width: 10rem;
+        padding: 0;
+        z-index: 10;
+        height: 100%;
+        background-color: rgb(30 30 30);
+        transition: left 0.3s ease-in-out;
+    }
+
+    .sidebar:before {
+        opacity: 1;
+        transition: opacity 0.3s ease-in-out;
+    }
+
+    .sidebarOpen {
+        left: 0;
+        transition: left 0.3s ease-in-out;
+    }
+
+    /* back to sidebar open */
+    .sidebarOpen:before {
+        opacity: 1;
+        content: "";
+        position: absolute;
+        top: 0;
+        right: -80rem;
+        width: 80rem;
+        height: 100%;
+        background-color: rgb(12 12 12 / 79%);
+        z-index: -1;
+        transition: opacity 0.3s ease-in-out;
+    }
+
+    .sidebarButton {
+        cursor: pointer;
+        display: block;
+        border: none;
+        border-radius: 0.25rem;
+        position: absolute;
+        top: 0;
+        box-shadow: -1rem 0rem 0rem 0px #1e1e1e;
+        right: -2.755rem;
+        width: 2.755rem;
+        height: 2.755rem;
+        background-color: rgb(30 30 30);
+        color: #b7b7b7;
+    }
+
+    .sidebarButton:hover {
+        color: rgb(255, 255, 255);
+    }
+
+    .main {
+        flex: 1 0 auto;
+        overflow: scroll;
+        width: 100%;
+        padding: 4rem 1rem 2rem 1rem;
+    }
+}
