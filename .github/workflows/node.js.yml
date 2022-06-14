@@ -27,6 +27,7 @@ jobs:
           cache: "npm"
       - run: npm install --dev
       - run: npm ci
+      - run: npm install --save-dev typescript @types/node @types/jest
       - run: npm run build --if-present
       - run: npm run test --if-present
       - run: npm run coverage --if-present
