@@ -18,6 +18,7 @@ RUN npm install --production
 COPY ./ ./
 
 # Build app
+RUN npm install --save-dev typescript @types/node
 RUN npm run build
 
 # Expose the listening port
