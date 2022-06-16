@@ -1,44 +1,16 @@
 import { API_URL } from '../../../config'
 import type { NextApiRequest, NextApiResponse } from 'next'
+import musiciansService from '../../../services/musicians'
 
-const ENDPOINT = `${API_URL}/musicians`
-
-export default async function handler (
-  req: NextApiRequest,
-  res: NextApiResponse<any>
-) {
+export default async function handler(req: NextApiRequest, res: NextApiResponse<any>) {
+  const client = musiciansService(req, res)
   if (req.method === 'GET') {
-    const { id } = req.query
-    const reponse = await fetch(`${ENDPOINT}/${id}`, {
-      headers: { authorization: req.headers.authorization || '' }
-    })
-    const data = await reponse.json()
-    data.image = `${API_URL}/files/${data.image}`
-    res.status(200).json(data)
+    await client.getMusician()
   } else if (req.method === 'DELETE') {
-    const { id } = req.query
-    const reponse = await fetch(`${ENDPOINT}/${id}`, {
-      method: 'DELETE',
-      headers: { authorization: req.headers.authorization || '' }
-    })
-    const data = await reponse.json()
-    res.status(200).json(data)
+    await client.deleteById()
   } else if (req.method === 'PUT') {
-    const { id } = req.query
-    const body = req.body
-    const response = await fetch(`${ENDPOINT}/${id}`, {
-      method: 'PUT',
-      headers: {
-        'Content-Type': 'application/json',
-        authorization: req.headers.authorization || ''
-      },
-      body: JSON.stringify(body)
-    })
-    const data = await response.json()
-    res.status(200).json(data)
+    await client.updateMusician()
   } else {
-    res.status(200).json({
-      message: 'Not implemented yet'
-    })
+    res.status(200).json({ message: 'Not implemented yet' })
   }
 }

@@ -23,7 +23,7 @@ const Item = styled(Paper)(({ theme }) => ({
 }))
 
 // card auto height
-function MusicianCard ({ musician }: any) {
+function MusicianCard({ musician }: any) {
   return (
     <Card style={{
       width: '100%',
@@ -92,14 +92,16 @@ const Home: NextPage = ({ initialData }: any) => {
   )
 }
 
-export async function getServerSideProps ({ query, req }: any) {
+export async function getServerSideProps({ query, req }: any) {
   try {
     const baseUrl = makeBaseurl(req)
     const res = await fetch(`${baseUrl}/api/musicians?size=100&page=1&order=id&sort=asc`)
     const json = await res.json()
+    if (json.error) return { props: { initialData: { rows: [], count: 0 }, error: JSON.parse(json.error) } }
     return { props: { initialData: json } }
   } catch (error) {
-    return { props: { initialData: null, error } }
+    console.log('>>> 2', error)
+    return { props: { initialData: { rows: [], count: 0 }, error } }
   }
 }
 

@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useCallback, useEffect, useState } from 'react'
 import Grid from '@mui/material/Grid'
 import Paper from '@mui/material/Paper'
 import Card from '@mui/material/Card'
@@ -11,29 +11,39 @@ import BreadcrumbsSite from '../../components/BreadcrumbsSite'
 import makeBaseurl from '../../utils/makeBaseurl'
 import MusicianForm from '../../components/MusicianForm'
 import UploadMusicianAvatar from '../../components/UploadMusicianAvatar'
+import { useAuth } from '../../contexts/AuthContext'
 
 const Musician = ({ initialData }: any) => {
+  const auth = useAuth()
   const [openSuccess, setOpenSuccess] = useState(false)
   const [data, setData] = useState(initialData)
   const router = useRouter()
+
+  const authCheck = useCallback(() => {
+    if (auth.data.isLogin === null) return
+    if (!auth.data.isLogin) router.push('/')
+  }, [auth.data, router])
+
+  useEffect(() => {
+    authCheck()
+  }, [authCheck])
 
   const handlerSave = async () => {
     const response = await fetch(`/api/musicians/${data.id}`, {
       method: 'PUT',
       headers: {
-        'Content-Type': 'application/json'
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${auth.data.token.jwt}`
       },
       body: JSON.stringify(data)
     })
-    const json = await response.json()
-    console.log(json)
+    // const json = await response.json()
     if (response.status === 200) {
       setOpenSuccess(true)
       setTimeout(() => {
         setOpenSuccess(false)
-        // redirect to list
         router.push('/musicians')
-      }, 3000)
+      }, 1000)
     }
   }
 
@@ -41,26 +51,29 @@ const Musician = ({ initialData }: any) => {
     setOpenSuccess(true)
     setTimeout(() => {
       setOpenSuccess(false)
-      // redirect to list
       router.push('/musicians')
-    }, 3000)
+    }, 1000)
   }
 
   const handlerDelete = async () => {
-    const response = await fetch(`/api/musicians/${data.id}`, { method: 'DELETE' })
-    const json = await response.json()
-    console.log(json)
+    const response = await fetch(`/api/musicians/${data.id}`, {
+      method: 'DELETE',
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${auth.data.token.jwt}`
+      },
+    })
+    await response.json()
     if (response.status === 200) {
       setOpenSuccess(true)
       setTimeout(() => {
         setOpenSuccess(false)
-        // redirect to list
         router.push('/musicians')
-      }, 3000)
+      }, 1000)
     }
   }
 
-  return data
+  return auth.data.isLogin && data
     ? (
       <div>
         <BreadcrumbsSite urls={[
@@ -86,9 +99,7 @@ const Musician = ({ initialData }: any) => {
                     color="error"
                     startIcon={<DeleteForever />}
                     onClick={handlerDelete}
-                  >
-                    Delete
-                  </Button>}
+                  >Delete</Button>}
               />
               <CardContent>
                 <MusicianForm
@@ -101,20 +112,12 @@ const Musician = ({ initialData }: any) => {
               </CardContent>
             </Card>
           </Grid>
-          <Grid item xs={12} style={{ display: 'none' }}>
-            <Paper style={{ padding: 10 }}>
-              <pre>{JSON.stringify(data, null, 2)}</pre>
-            </Paper>
-          </Grid>
         </Grid>
       </div>
-      )
-    : (
-      <div>Loading...</div>
-      )
+    ) : (<div>Loading...</div>)
 }
 
-export async function getServerSideProps ({ query, req }: any) {
+export async function getServerSideProps({ query, req }: any) {
   try {
     const baseUrl = makeBaseurl(req)
     const id = query.id

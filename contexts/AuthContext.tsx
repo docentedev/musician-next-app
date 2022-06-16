@@ -12,10 +12,12 @@ function parseJwt(token: string) {
     return model
 }
 
-const initialState = {
+const initialState: any = {
     data: {
-        token: {},
-        isLogin: false,
+        token: {
+            jwt: ''
+        },
+        isLogin: null
     },
     setData: (_d: { key: string, value: any }) => { }
 }
@@ -23,16 +25,15 @@ const initialState = {
 const AuthCtx = createContext(initialState)
 
 const AuthProvider = ({ children }: any) => {
-    const [data, setData] = useState({
-        token: {},
-        isLogin: false,
-    })
+    const [data, setData] = useState(initialState.data)
 
     useEffect(() => {
         const lsData = localStorage.getItem('token')
         let newData = {
-            token: {},
-            isLogin: false,
+            token: {
+                jwt: ''
+            },
+            isLogin: false
         }
         if (lsData) {
             newData.token = JSON.parse(lsData)
@@ -59,7 +60,9 @@ const AuthProvider = ({ children }: any) => {
                     setData({
                         ...data,
                         isLogin: false,
-                        token: {}
+                        token: {
+                            jwt: ''
+                        }
                     })
                 } else {
                     setData({

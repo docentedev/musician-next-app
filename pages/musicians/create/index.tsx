@@ -4,8 +4,10 @@ import Grid from '@mui/material/Grid'
 import Paper from '@mui/material/Paper'
 import BreadcrumbsSite from '../../../components/BreadcrumbsSite'
 import MusicianForm from '../../../components/MusicianForm'
+import { useAuth } from '../../../contexts/AuthContext'
 
 const Musician = ({ initialData }: any) => {
+  const auth = useAuth()
   const [openSuccess, setOpenSuccess] = useState(false)
   const [data, setData] = useState(initialData)
   const router = useRouter()
@@ -14,7 +16,8 @@ const Musician = ({ initialData }: any) => {
     const response = await fetch('/api/musicians', {
       method: 'POST',
       headers: {
-        'Content-Type': 'application/json'
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${auth.data.token.jwt}`
       },
       body: JSON.stringify(data)
     })
