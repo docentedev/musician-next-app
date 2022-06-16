@@ -15,7 +15,10 @@ handler.post(async (req: any, res: any) => {
       id: req.body.id,
       file: fs.createReadStream(imagePath)
     }
-    request.post({ url: ENDPOINT, formData }, function optionalCallback (err, _httpResponse, body) {
+
+    request.post({ url: ENDPOINT, formData, headers: {
+      authorization: req.headers.authorization
+    } }, function optionalCallback (err, _httpResponse, body) {
       if (err) {
         console.error('upload failed:', err)
         res.status(500).json({ error: err })

@@ -9,14 +9,17 @@ export default async function handler (
 ) {
   if (req.method === 'GET') {
     const { id } = req.query
-    const reponse = await fetch(`${ENDPOINT}/${id}`)
+    const reponse = await fetch(`${ENDPOINT}/${id}`, {
+      headers: { authorization: req.headers.authorization || '' }
+    })
     const data = await reponse.json()
     data.image = `${API_URL}/files/${data.image}`
     res.status(200).json(data)
   } else if (req.method === 'DELETE') {
     const { id } = req.query
     const reponse = await fetch(`${ENDPOINT}/${id}`, {
-      method: 'DELETE'
+      method: 'DELETE',
+      headers: { authorization: req.headers.authorization || '' }
     })
     const data = await reponse.json()
     res.status(200).json(data)
@@ -26,7 +29,8 @@ export default async function handler (
     const response = await fetch(`${ENDPOINT}/${id}`, {
       method: 'PUT',
       headers: {
-        'Content-Type': 'application/json'
+        'Content-Type': 'application/json',
+        authorization: req.headers.authorization || ''
       },
       body: JSON.stringify(body)
     })

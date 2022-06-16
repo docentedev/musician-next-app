@@ -18,7 +18,7 @@ const uploadFileWithIdRequest = async (id: string, file: any, jwt: any) => {
       method: 'POST',
       body: form,
       headers: {
-        Authotization: `Bearer ${jwt}`
+        Authorization: `Bearer ${jwt}`
       }
     })
     const json = await result.json()

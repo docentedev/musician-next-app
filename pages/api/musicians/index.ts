@@ -3,7 +3,7 @@ import type { NextApiRequest, NextApiResponse } from 'next'
 
 const ENDPOINT = `${API_URL}/musicians`
 
-export default async function handler (
+export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse<any>
 ) {
@@ -11,7 +11,8 @@ export default async function handler (
     const response = await fetch(ENDPOINT, {
       method: 'POST',
       headers: {
-        'Content-Type': 'application/json'
+        'Content-Type': 'application/json',
+        authorization: req.headers.authorization || ''
       },
       body: JSON.stringify(req.body)
     })
@@ -21,7 +22,9 @@ export default async function handler (
     try {
       const { page, size, order, sort } = req.query
       const url = `${ENDPOINT}?page=${page}&size=${size}&order=${order}&sort=${sort}`
-      const reponse = await fetch(url)
+      const reponse = await fetch(url, {
+        headers: { authorization: req.headers.authorization || '' }
+      })
       const data = await reponse.json()
       const rows = data.rows.map((item: any) => {
         item.image = `${API_URL}/files/${item.image}`
