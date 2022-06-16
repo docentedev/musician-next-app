@@ -47,11 +47,12 @@ const AuthProvider = ({ children }: any) => {
             setData: (newData: { key: string, value: string }) => {
                 if (newData.key === 'token') {
                     const token = parseJwt(newData.value)
+                    token.jwt = newData.value
                     localStorage.setItem('token', JSON.stringify(token))
                     setData({
                         ...data,
                         isLogin: true,
-                        [newData.key]: token
+                        [newData.key]: token,
                     })
                 } else if (newData.key === 'logout') {
                     localStorage.removeItem('token')

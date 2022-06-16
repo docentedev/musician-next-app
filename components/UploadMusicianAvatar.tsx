@@ -2,12 +2,13 @@ import { Avatar, Button, IconButton, Stack } from '@mui/material'
 import DeleteForever from '@mui/icons-material/DeleteForever'
 import { useState } from 'react'
 import { styled } from '@mui/material/styles'
+import { useAuth } from '../contexts/AuthContext'
 
 const Input = styled('input')({
   display: 'none'
 })
 
-const uploadFileWithIdRequest = async (id: string, file: any) => {
+const uploadFileWithIdRequest = async (id: string, file: any, jwt: any) => {
   const form = new FormData()
   form.append('file', file)
   form.append('id', id)
@@ -15,7 +16,10 @@ const uploadFileWithIdRequest = async (id: string, file: any) => {
   try {
     const result = await fetch('/api/musicians/upload/file', {
       method: 'POST',
-      body: form
+      body: form,
+      headers: {
+        Authotization: `Bearer ${jwt}`
+      }
     })
     const json = await result.json()
     return json
@@ -30,6 +34,7 @@ const UploadForm = ({
   image: initialImage,
   onSave
 }: { id: string, image: string, onSave: Function }) => {
+  const auth: any = useAuth()
   const [file, setFile] = useState<any>()
 
   const handleFileChange = (e: any) => {
@@ -41,7 +46,7 @@ const UploadForm = ({
   const handleSubmit = async (e: any) => {
     e.preventDefault()
     if (file && initialId) {
-      await uploadFileWithIdRequest(initialId, file)
+      await uploadFileWithIdRequest(initialId, file, auth.data.token.jwt)
       onSave()
     } else {
       console.log('no file or id')
