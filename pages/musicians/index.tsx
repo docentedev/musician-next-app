@@ -9,6 +9,9 @@ import Button from '@mui/material/Button'
 import EditIcon from '@mui/icons-material/Edit'
 // import Image from 'next/image'
 import { Avatar } from '@mui/material'
+import { useRouter } from 'next/router'
+import { useCallback, useEffect } from 'react'
+import { useAuth } from '../../contexts/AuthContext'
 
 const columns: GridColDef[] = [
   // { field: 'id', headerName: 'ID' },
@@ -50,6 +53,26 @@ const tableProps = {
 }
 
 const Musicians = () => {
+  const router = useRouter()
+  const auth = useAuth()
+
+  const authCheck = useCallback(() => {
+    if (auth.data) {
+      console.log(auth.data.isLogin)
+      if (!auth.data.isLogin) {
+        router.push('/')
+      }
+    }
+  }, [auth.data, router])
+
+  useEffect(() => {
+    router.events.on('routeChangeComplete', authCheck)
+    return () => {
+      // router.events.off('routeChangeStart', hideContent);
+      router.events.off('routeChangeComplete', authCheck);
+    }
+  }, [auth.data, authCheck, router])
+
   return (
     <div>
       <BreadcrumbsSite urls={[

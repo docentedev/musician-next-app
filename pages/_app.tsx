@@ -10,6 +10,7 @@ import createEmotionCache from '../utils/createEmotionCache'
 import lightTheme from '../styles/theme/lightTheme'
 import '../styles/globals.css'
 import { LocalizationProvider } from '@mui/x-date-pickers'
+import AuthProvider from '../contexts/AuthContext'
 
 const clientSideEmotionCache = createEmotionCache()
 
@@ -17,16 +18,18 @@ const App = (props: AppProps & any) => {
   const { Component, emotionCache = clientSideEmotionCache, pageProps } = props
 
   return (
-    <CacheProvider value={emotionCache}>
-      <ThemeProvider theme={lightTheme}>
-        <LocalizationProvider dateAdapter={AdapterDateFns}>
-          <CssBaseline />
-          <Layout>
-            <Component {...pageProps} />
-          </Layout>
-        </LocalizationProvider>
-      </ThemeProvider>
-    </CacheProvider>
+    <AuthProvider>
+      <CacheProvider value={emotionCache}>
+        <ThemeProvider theme={lightTheme}>
+          <LocalizationProvider dateAdapter={AdapterDateFns}>
+            <CssBaseline />
+            <Layout>
+              <Component {...pageProps} />
+            </Layout>
+          </LocalizationProvider>
+        </ThemeProvider>
+      </CacheProvider>
+    </AuthProvider>
   )
 }
 

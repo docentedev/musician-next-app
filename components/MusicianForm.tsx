@@ -6,21 +6,7 @@ import Button from '@mui/material/Button'
 import { Alert, Collapse, IconButton } from '@mui/material'
 import CloseIcon from '@mui/icons-material/Close'
 import { DesktopDatePicker } from '@mui/x-date-pickers/DesktopDatePicker'
-
-const CustomTextField = ({ model, name, label, onChange, ...props }: any) => {
-  return (
-        <TextField
-            {...props}
-            label={label}
-            name={name}
-            value={model[name]}
-            onChange={onChange}
-            margin="normal"
-            variant="outlined"
-            fullWidth
-        />
-  )
-}
+import CustomTextField from './CustomField'
 
 const MusicianForm = ({
   data,
