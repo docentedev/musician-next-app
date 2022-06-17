@@ -24,7 +24,6 @@ const uploadFileWithIdRequest = async (id: string, file: any, jwt: any) => {
     const json = await result.json()
     return json
   } catch (error) {
-    console.log(error)
     throw error
   }
 }

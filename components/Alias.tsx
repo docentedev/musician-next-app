@@ -5,9 +5,7 @@ const Alias = ({ alias = '' }: { alias: string }) => {
     return (
         <div className={styles.chips}>{
             alias.split(',').filter((e: string) => e !== '').map((word: string) => (
-                <div className={styles.chipContainer} key={word}>
-                    <Chip label={word} />
-                </div>
+                <Chip key={word} label={word} />
             ))
         }</div>
     )

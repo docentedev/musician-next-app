@@ -82,7 +82,6 @@ function SelectAsynchronous ({ onChange, value, label, name }: SelectAsynchronou
       isOptionEqualToValue={(option: City, value: City) => option.city_fk === value.city_fk}
       getOptionLabel={(option: City) => option.city_name || ''}
       onChange={(event, value) => {
-        console.log(value)
         if (value) {
           onChange(value)
         } else {

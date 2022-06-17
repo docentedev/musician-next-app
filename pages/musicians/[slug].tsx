@@ -26,16 +26,18 @@ const Musician = ({ initialData: data }: any) => {
                 <Grid>
                     <Grid item xs={12}>
                         <Card className={styles.card}>
-                            <CardMedia
-                                component="img"
-                                sx={{ width: 200 }}
-                                image={data.image}
-                                alt={`${data.first_name} ${data.last_name}`}
-                                onError={(e: any) => e.target.src = 'https://via.placeholder.com/150?text=No+Image'}
-                            />
-                            <Box sx={{ display: 'flex', flexDirection: 'column' }}>
-                                <CardContent sx={{ flex: '1 0 auto' }}>
-                                    <Typography component="div" variant="h5">
+                            <div className={styles.mediaContainer}>
+                                <CardMedia
+                                    className={styles.media}
+                                    component="img"
+                                    image={data.image}
+                                    alt={`${data.first_name} ${data.last_name}`}
+                                    onError={(e: any) => e.target.src = 'https://via.placeholder.com/150?text=No+Image'}
+                                />
+                            </div>
+                            <Box className={styles.box}>
+                                <CardContent>
+                                    <Typography component="div" variant="h5" className={styles.title}>
                                         {data.first_name} {data.last_name}
                                     </Typography>
                                     <Typography variant="subtitle1" color="text.secondary" component="div">
@@ -43,15 +45,13 @@ const Musician = ({ initialData: data }: any) => {
                                     </Typography>
                                 </CardContent>
                                 <CardContent>
-                                    <Box sx={{ display: 'flex', alignItems: 'center', pb: 1 }}>
+                                    <Box>
                                         {data.birth_date && (<Typography variant="body2" color="text.secondary">{dateToMMDDYYYY(data.birth_date)}</Typography>)}
                                         {data.death_date && (<Typography variant="body2" color="text.secondary" marginLeft={1} marginRight={1}>-</Typography>)}
                                         {data.death_date && (<Typography variant="body2" color="text.secondary">{dateToMMDDYYYY(data.death_date)}</Typography>)}
                                     </Box>
-                                    <Box sx={{ display: 'flex', alignItems: 'center', pb: 1 }}>
-                                        {data.city_name && (<Typography variant="body2" color="text.secondary">{data.city_name}</Typography>)}
-                                        <Typography variant="body2" color="text.secondary" marginLeft={1} />
-                                        {data.country_name && (<Typography variant="body2" color="text.secondary">{data.country_name}</Typography>)}
+                                    <Box>
+                                        {data.city_name && (<Typography variant="body2" color="text.secondary">{data.city_name} {data.country_name}</Typography>)}
                                     </Box>
                                 </CardContent>
                             </Box>
@@ -59,7 +59,7 @@ const Musician = ({ initialData: data }: any) => {
                         <div className={styles.divider} />
                         {data.description && (<Card>
                             <CardContent>
-                                <Box sx={{ display: 'flex', alignItems: 'center', pb: 1 }}>
+                                <Box>
                                     <Typography variant="body1" color="text.primary">{data.description}</Typography>
                                 </Box>
                             </CardContent>

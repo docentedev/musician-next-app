@@ -44,7 +44,6 @@ export async function getServerSideProps({ query, req }: any) {
     if (json.error) return { props: { initialData: { rows: [], count: 0 }, error: JSON.parse(json.error) } }
     return { props: { initialData: json } }
   } catch (error) {
-    console.log('>>> 2', error)
     return { props: { initialData: { rows: [], count: 0 }, error } }
   }
 }

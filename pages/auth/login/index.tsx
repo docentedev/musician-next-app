@@ -1,4 +1,4 @@
-import { Button } from '@mui/material'
+import { Button, CircularProgress } from '@mui/material'
 import Card from '@mui/material/Card'
 import CardContent from '@mui/material/CardContent'
 import CardHeader from '@mui/material/CardHeader'
@@ -9,8 +9,10 @@ import BreadcrumbsSite from '../../../components/BreadcrumbsSite'
 import CustomTextField from '../../../components/CustomField'
 import routes from '../../../config/routes'
 import { useAuth } from '../../../contexts/AuthContext'
+import styles from './index.module.css'
 
 const Login = () => {
+  const [loading, setLoading] = useState(false)
   const [user, setUser] = useState({
     username: '',
     password: '',
@@ -24,6 +26,7 @@ const Login = () => {
 
   const handleLogin = async (e: any) => {
     e.preventDefault()
+    setLoading(true)
     try {
       const response = await fetch('/api/users/login', {
         method: 'POST',
@@ -34,10 +37,11 @@ const Login = () => {
       })
       const json = await response.json()
       auth.setData({ key: 'token', value: json.token })
-      console.log(json)
       router.push(routes.adminMusicians())
+      setLoading(false)
     } catch (error) {
       console.log(error)
+      setLoading(false)
     }
   }
 
@@ -47,30 +51,34 @@ const Login = () => {
         { text: 'Home', url: '/' },
         { text: 'Login', url: '/login' }
       ]} />
-      <Card>
-        <CardHeader
-          title="Login"
-        />
-        <CardContent>
-          <form onSubmit={handleLogin}>
-            <CustomTextField
-              model={user} required name="username" label="Username" onChange={handleChange}
-            />
-            <CustomTextField
-              model={user} required name="password" type="password" label="Password" onChange={handleChange}
-            />
-            <Button
-              variant="contained"
-              color="primary"
-              type="submit"
-              endIcon={<InputIcon />}
-            >
-              Login
-            </Button>
-          </form>
-        </CardContent>
-      </Card>
-    </div >
+      <div className={styles.container}>
+        <Card>
+          <CardHeader
+            title="Login"
+          />
+          <CardContent>
+            {loading ? (<CircularProgress />) : (<form onSubmit={handleLogin}>
+              <CustomTextField
+                model={user} required name="username" autoComplete="current-password" label="Username" onChange={handleChange}
+              />
+              <CustomTextField
+                model={user} required name="password" autoComplete="current-password" type="password" label="Password" onChange={handleChange}
+              />
+              <Button
+                variant="contained"
+                color="primary"
+                type="submit"
+                fullWidth
+                size='large'
+                endIcon={<InputIcon />}
+              >
+                Login
+              </Button>
+            </form>)}
+          </CardContent>
+        </Card>
+      </div>
+    </div>
   )
 }
 

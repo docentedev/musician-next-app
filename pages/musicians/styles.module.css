@@ -3,20 +3,42 @@
     align-items: flex-start;
 }
 
-.card>img {
-    object-fit: contain;
-}
-
 .divider {
     margin: 2rem 0;
 }
 
+.media {
+    width: 10rem;
+    height: 10rem;
+    border-radius: 50%;
+    object-fit: cover;
+    margin: 1rem;
+}
+
+.box {}
+
+
 @media (max-width: 599px) {
+    .mediaContainer {
+        width: 100%;
+    }
+
+    .media {
+        width: 100%;
+        margin: auto;
+        height: auto;
+        border-radius: 0;
+    }
+
     .card {
         flex-direction: column;
     }
 
-    .card>img {
+    .title {
+        font-size: 1.2rem;
+    }
+
+    .box {
         width: 100%;
     }
 }

@@ -3,4 +3,10 @@
     gap: 0.5rem;
 }
 
-.chipContainer {}
+@media (max-width: 599px) {
+    .chips {
+        display: flex;
+        gap: 0.5rem;
+        flex-direction: row;
+    }
+}
