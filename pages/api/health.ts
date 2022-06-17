@@ -2,12 +2,19 @@
 import type { NextApiRequest, NextApiResponse } from 'next'
 
 type Data = {
-  name: string
+  uptime: number,
+  message: string,
+  date: Date
 }
 
 export default function handler(
   req: NextApiRequest,
   res: NextApiResponse<Data>
 ) {
-  res.status(200).json({ name: 'John Doe' })
+  const data = {
+    uptime: process.uptime(),
+    message: 'Ok',
+    date: new Date()
+  }
+  res.status(200).json(data)
 }
