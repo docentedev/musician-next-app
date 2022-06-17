@@ -1,0 +1,22 @@
+.card {
+    display: flex;
+    align-items: flex-start;
+}
+
+.card>img {
+    object-fit: contain;
+}
+
+.divider {
+    margin: 2rem 0;
+}
+
+@media (max-width: 599px) {
+    .card {
+        flex-direction: column;
+    }
+
+    .card>img {
+        width: 100%;
+    }
+}

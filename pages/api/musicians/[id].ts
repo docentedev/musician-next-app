@@ -1,4 +1,3 @@
-import { API_URL } from '../../../config'
 import type { NextApiRequest, NextApiResponse } from 'next'
 import musiciansService from '../../../services/musicians'
 

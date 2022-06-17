@@ -1,0 +1,24 @@
+.cardContainer {
+    flex-grow: 1;
+}
+
+.gridCardContainer {
+    display: flex;
+    justify-content: space-between;
+    align-content: space-around;
+    align-items: center;
+}
+
+@media (min-width: 1201px) {
+    .gridCardContainer {
+        max-width: 20%;
+        flex-basis: 20%;
+    }
+}
+
+@media (max-width: 400px) {
+    .gridCardContainer {
+        max-width: 100%;
+        flex-basis: 100%;
+    }
+}

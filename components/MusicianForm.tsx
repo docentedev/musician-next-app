@@ -45,6 +45,9 @@ const MusicianForm = ({
                 <Grid item xs={12} sm={12} md={6}>
                     <CustomTextField model={data} name="alias" label="Alias coma separated" onChange={handleChange} />
                 </Grid>
+                <Grid item xs={12} sm={12} md={12}>
+                    <CustomTextField model={data} name="description" label="Description" multiline onChange={handleChange} />
+                </Grid>
                 <Grid item xs={12}>
                     <SelectAsynchronous
                         value={{

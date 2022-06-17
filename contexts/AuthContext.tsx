@@ -1,4 +1,6 @@
-import { createContext, useContext, useEffect, useState } from 'react'
+import { useRouter } from 'next/router';
+import { createContext, useCallback, useContext, useEffect, useState } from 'react'
+import routes from '../config/routes';
 
 function parseJwt(token: string) {
     var base64Url = token.split('.')[1];
@@ -74,6 +76,20 @@ const AuthProvider = ({ children }: any) => {
         }}>
             {children}
         </AuthCtx.Provider>)
+}
+
+export const useIsAuth = () => {
+    const router = useRouter()
+    const { data } = useContext(AuthCtx)
+    const authCheck = useCallback(() => {
+        if (data.isLogin === null) return
+        if (!data.isLogin) router.push(routes.home())
+    }, [data, router])
+
+    useEffect(() => {
+        authCheck()
+    }, [authCheck])
+    return data.isLogin
 }
 
 export const useAuth = () => {

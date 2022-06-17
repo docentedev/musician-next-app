@@ -6,4 +6,12 @@ body {
 
 a {
   cursor: pointer;
+  color: #7cadd6;
+  text-decoration: none;
+  transition: color 0.1s ease-in-out;
+}
+
+a:hover {
+  color: #bdd7ed;
+  transition: color 0.1s ease-in-out;
 }

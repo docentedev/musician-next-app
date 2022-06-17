@@ -2,15 +2,19 @@ import { useState } from 'react'
 import { useRouter } from 'next/router'
 import Grid from '@mui/material/Grid'
 import Paper from '@mui/material/Paper'
-import BreadcrumbsSite from '../../../components/BreadcrumbsSite'
-import MusicianForm from '../../../components/MusicianForm'
-import { useAuth } from '../../../contexts/AuthContext'
+import BreadcrumbsSite from '../../../../components/BreadcrumbsSite'
+import MusicianForm from '../../../../components/MusicianForm'
+import { useAuth, useIsAuth } from '../../../../contexts/AuthContext'
+import routes from '../../../../config/routes'
+import { CircularProgress } from '@mui/material'
 
 const Musician = ({ initialData }: any) => {
   const auth = useAuth()
   const [openSuccess, setOpenSuccess] = useState(false)
   const [data, setData] = useState(initialData)
   const router = useRouter()
+
+  const isLogin = useIsAuth()
 
   const handlerSave = async () => {
     const response = await fetch('/api/musicians', {
@@ -21,25 +25,22 @@ const Musician = ({ initialData }: any) => {
       },
       body: JSON.stringify(data)
     })
-    const json = await response.json()
-    console.log(json)
     if (response.status === 201) {
       setOpenSuccess(true)
       setTimeout(() => {
         setOpenSuccess(false)
-        // redirect to list
-        router.push('/musicians')
+        router.push(routes.adminMusicians())
       }, 3000)
     }
   }
 
-  return data
+  return data && isLogin
     ? (
       <div>
         <BreadcrumbsSite urls={[
-          { text: 'Home', url: '/' },
-          { text: 'Musicians', url: '/musicians' },
-          { text: 'Create', url: '/musicians/create' }
+          { text: 'Home', url: (routes.home()) },
+          { text: 'Musicians', url: (routes.adminMusicians()) },
+          { text: 'Create', url: (routes.adminMusicianCreate()) }
         ]} />
         <Grid>
           <Grid item xs={12}>
@@ -60,13 +61,11 @@ const Musician = ({ initialData }: any) => {
           </Grid>
         </Grid>
       </div>
-      )
-    : (
-      <div>Loading...</div>
-      )
+    )
+    : (<CircularProgress />)
 }
 
-export async function getServerSideProps ({ query, req }: any) {
+export async function getServerSideProps({ query, req }: any) {
   return {
     props: {
       initialData: {
@@ -80,7 +79,8 @@ export async function getServerSideProps ({ query, req }: any) {
         city_name: '',
         country_name: '',
         alias: '',
-        city_fk: 0
+        city_fk: 0,
+        description: '',
       }
     }
   }

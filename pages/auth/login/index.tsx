@@ -4,9 +4,11 @@ import CardContent from '@mui/material/CardContent'
 import CardHeader from '@mui/material/CardHeader'
 import { useRouter } from 'next/router'
 import { useState } from 'react'
-import BreadcrumbsSite from '../../components/BreadcrumbsSite'
-import CustomTextField from '../../components/CustomField'
-import { useAuth } from '../../contexts/AuthContext'
+import InputIcon from '@mui/icons-material/Input'
+import BreadcrumbsSite from '../../../components/BreadcrumbsSite'
+import CustomTextField from '../../../components/CustomField'
+import routes from '../../../config/routes'
+import { useAuth } from '../../../contexts/AuthContext'
 
 const Login = () => {
   const [user, setUser] = useState({
@@ -33,7 +35,7 @@ const Login = () => {
       const json = await response.json()
       auth.setData({ key: 'token', value: json.token })
       console.log(json)
-      router.push('/musicians')
+      router.push(routes.adminMusicians())
     } catch (error) {
       console.log(error)
     }
@@ -57,7 +59,12 @@ const Login = () => {
             <CustomTextField
               model={user} required name="password" type="password" label="Password" onChange={handleChange}
             />
-            <Button type="submit">
+            <Button
+              variant="contained"
+              color="primary"
+              type="submit"
+              endIcon={<InputIcon />}
+            >
               Login
             </Button>
           </form>

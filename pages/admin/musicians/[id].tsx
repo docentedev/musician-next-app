@@ -1,17 +1,18 @@
-import { useCallback, useEffect, useState } from 'react'
+import { useState } from 'react'
 import Grid from '@mui/material/Grid'
-import Paper from '@mui/material/Paper'
 import Card from '@mui/material/Card'
 import CardContent from '@mui/material/CardContent'
 import CardHeader from '@mui/material/CardHeader'
 import Button from '@mui/material/Button'
 import DeleteForever from '@mui/icons-material/DeleteForever'
 import { useRouter } from 'next/router'
-import BreadcrumbsSite from '../../components/BreadcrumbsSite'
-import makeBaseurl from '../../utils/makeBaseurl'
-import MusicianForm from '../../components/MusicianForm'
-import UploadMusicianAvatar from '../../components/UploadMusicianAvatar'
-import { useAuth } from '../../contexts/AuthContext'
+import BreadcrumbsSite from '../../../components/BreadcrumbsSite'
+import makeBaseurl from '../../../utils/makeBaseurl'
+import MusicianForm from '../../../components/MusicianForm'
+import UploadMusicianAvatar from '../../../components/UploadMusicianAvatar'
+import { useAuth, useIsAuth } from '../../../contexts/AuthContext'
+import routes from '../../../config/routes'
+import { CircularProgress } from '@mui/material'
 
 const Musician = ({ initialData }: any) => {
   const auth = useAuth()
@@ -19,14 +20,7 @@ const Musician = ({ initialData }: any) => {
   const [data, setData] = useState(initialData)
   const router = useRouter()
 
-  const authCheck = useCallback(() => {
-    if (auth.data.isLogin === null) return
-    if (!auth.data.isLogin) router.push('/')
-  }, [auth.data, router])
-
-  useEffect(() => {
-    authCheck()
-  }, [authCheck])
+  const isLogin = useIsAuth()
 
   const handlerSave = async () => {
     const response = await fetch(`/api/musicians/${data.id}`, {
@@ -37,12 +31,11 @@ const Musician = ({ initialData }: any) => {
       },
       body: JSON.stringify(data)
     })
-    // const json = await response.json()
     if (response.status === 200) {
       setOpenSuccess(true)
       setTimeout(() => {
         setOpenSuccess(false)
-        router.push('/musicians')
+        router.push(routes.adminMusicians())
       }, 1000)
     }
   }
@@ -51,7 +44,7 @@ const Musician = ({ initialData }: any) => {
     setOpenSuccess(true)
     setTimeout(() => {
       setOpenSuccess(false)
-      router.push('/musicians')
+      router.push(routes.adminMusicians())
     }, 1000)
   }
 
@@ -68,18 +61,18 @@ const Musician = ({ initialData }: any) => {
       setOpenSuccess(true)
       setTimeout(() => {
         setOpenSuccess(false)
-        router.push('/musicians')
+        router.push(routes.adminMusicians())
       }, 1000)
     }
   }
 
-  return auth.data.isLogin && data
+  return data && isLogin
     ? (
       <div>
         <BreadcrumbsSite urls={[
-          { text: 'Home', url: '/' },
-          { text: 'Musicians', url: '/musicians' },
-          { text: data.id, url: '/musicians' }
+          { text: 'Home', url: (routes.home()) },
+          { text: 'Musicians', url: (routes.adminMusicians()) },
+          { text: data.id, url: (routes.adminMusician(data.id)) }
         ]} />
         <Grid>
           <Grid item xs={12}>
@@ -114,7 +107,7 @@ const Musician = ({ initialData }: any) => {
           </Grid>
         </Grid>
       </div>
-    ) : (<div>Loading...</div>)
+    ) : (<CircularProgress />)
 }
 
 export async function getServerSideProps({ query, req }: any) {

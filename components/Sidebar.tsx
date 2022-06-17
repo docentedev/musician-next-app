@@ -10,7 +10,8 @@ import ArrowRightIcon from '@mui/icons-material/ArrowRight'
 import Menu from '@mui/icons-material/Menu'
 import styles from './Layout.module.css'
 import { useAuth } from '../contexts/AuthContext'
-import { Button } from '@mui/material'
+import routes from '../config/routes'
+import { IconButton } from '@mui/material'
 
 const ItemLink = ({ currentUrl, text, url, exact = true }: any) => {
     return (
@@ -34,29 +35,20 @@ export default function Sidebar() {
     const auth = useAuth()
     const router = useRouter()
 
-    const handleLogout = () => {
-        auth.setData({ key: 'logout', value: false })
-        router.push('/')
-    }
-
     return (
         <div className={`${styles.sidebar} ${open ? styles.sidebarOpen : ''}`}>
-            <button
-                className={styles.sidebarButton}
-                onClick={() => setOpen(!open)}
-            >
+            <IconButton
+                color="inherit"
+                aria-label="menu"
+                className={styles.sidebarButton} onClick={() => setOpen(!open)}>
                 <Menu />
-            </button>
+            </IconButton>
             <Paper>
                 <MenuList>
-                    <ItemLink currentUrl={router.pathname} text="Home" url="/" />
-                    {auth.data.isLogin && <ItemLink currentUrl={router.pathname} text="Cities" url="/cities" exact={false} />}
-                    {auth.data.isLogin && <ItemLink currentUrl={router.pathname} text="Musicians" url="/musicians" exact={false} />}
-                    {!auth.data.isLogin && <ItemLink currentUrl={router.pathname} text="Login" url="/login" exact={false} />}
+                    <ItemLink currentUrl={router.pathname} text="Home" url={routes.home()} />
+                    {auth.data.isLogin && <ItemLink currentUrl={router.pathname} text="Cities" url={routes.adminCities()} exact={false} />}
+                    {auth.data.isLogin && <ItemLink currentUrl={router.pathname} text="Musicians" url={routes.adminMusicians()} exact={false} />}
                 </MenuList>
-                {auth.data.isLogin && <Button fullWidth onClick={handleLogout}>
-                    Logout
-                </Button>}
             </Paper>
         </div >
     )

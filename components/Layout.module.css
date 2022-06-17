@@ -1,13 +1,21 @@
+.menu {
+    height: 64px;
+    position: fixed;
+    z-index: 11;
+    width: 100%;
+}
+
 .layout {
     display: flex;
-    min-height: 100vh;
-    height: 100%;
+    min-height: calc(100vh);
+    overflow: hidden;
+    height: 100vh;
     background-color: rgb(20, 20, 20);
 }
 
 .sidebar {
-    width: 20rem;
-    padding: 2rem 1rem;
+    width: 12rem;
+    padding: 5rem 1rem 2rem 1rem;
     z-index: 10;
     height: 100%;
 }
@@ -19,8 +27,19 @@
 .main {
     flex: 1 0 auto;
     overflow: scroll;
-    width: calc(100% - 20rem);
-    padding: 2rem 1rem 2rem 0;
+    width: calc(100% - 12rem);
+    height: 100%;
+    padding: 5rem 2rem 1rem 2rem;
+}
+
+.logo {}
+
+.login {}
+
+.anonymous {}
+
+.layout.anonymous>.sidebar {
+    display: none;
 }
 
 .resetLink {
@@ -29,6 +48,14 @@
 }
 
 @media (max-width: 1024px) {
+    .logo.login {
+        margin-left: 3rem;
+    }
+
+    .menu {
+        z-index: 9;
+    }
+
     .sidebar {
         top: 0;
         left: -10rem;
@@ -66,28 +93,30 @@
     }
 
     .sidebarButton {
-        cursor: pointer;
         display: block;
-        border: none;
-        border-radius: 0.25rem;
         position: absolute;
-        top: 0;
-        box-shadow: -1rem 0rem 0rem 0px #1e1e1e;
-        right: -2.755rem;
-        width: 2.755rem;
-        height: 2.755rem;
-        background-color: rgb(30 30 30);
-        color: #b7b7b7;
-    }
-
-    .sidebarButton:hover {
-        color: rgb(255, 255, 255);
+        top: 0.8rem;
+        right: -2.9rem;
+        height: 2.5rem;
     }
 
     .main {
         flex: 1 0 auto;
         overflow: scroll;
         width: 100%;
-        padding: 4rem 1rem 2rem 1rem;
+    }
+}
+
+@media (max-width: 599px) {
+    .menu {
+        height: 56px;
+    }
+
+    .layout {
+        min-height: 100vh;
+    }
+
+    .sidebarButton {
+        top: 0.5rem;
     }
 }
