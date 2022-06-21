@@ -13,6 +13,7 @@ import UploadMusicianAvatar from '../../../components/UploadMusicianAvatar'
 import { useAuth, useIsAuth } from '../../../contexts/AuthContext'
 import routes from '../../../config/routes'
 import { CircularProgress } from '@mui/material'
+import { LibraryMusic } from '@mui/icons-material'
 
 const Musician = ({ initialData }: any) => {
   const auth = useAuth()
@@ -20,9 +21,9 @@ const Musician = ({ initialData }: any) => {
   const [data, setData] = useState(initialData)
   const router = useRouter()
 
-  const isLogin = useIsAuth()
+  const isLogin = useIsAuth(['admin'])
 
-  const handlerSave = async () => {
+  const handleSave = async () => {
     const response = await fetch(`/api/musicians/${data.id}`, {
       method: 'PUT',
       headers: {
@@ -40,7 +41,7 @@ const Musician = ({ initialData }: any) => {
     }
   }
 
-  const handlerSaveAvatar = () => {
+  const handleSaveAvatar = () => {
     setOpenSuccess(true)
     setTimeout(() => {
       setOpenSuccess(false)
@@ -48,7 +49,7 @@ const Musician = ({ initialData }: any) => {
     }, 1000)
   }
 
-  const handlerDelete = async () => {
+  const handleDelete = async () => {
     const response = await fetch(`/api/musicians/${data.id}`, {
       method: 'DELETE',
       headers: {
@@ -78,26 +79,21 @@ const Musician = ({ initialData }: any) => {
           <Grid item xs={12}>
             <Card style={{ marginBottom: 10 }}>
               <CardContent>
-                <UploadMusicianAvatar id={data.id} image={data.image} onSave={handlerSaveAvatar} />
+                <UploadMusicianAvatar id={data.id} image={data.image} onSave={handleSaveAvatar} />
               </CardContent>
             </Card>
           </Grid>
           <Grid item xs={12}>
             <Card style={{ marginBottom: 10 }}>
               <CardHeader
-                title="Musicians"
-                action={
-                  <Button
-                    variant="contained"
-                    color="error"
-                    startIcon={<DeleteForever />}
-                    onClick={handlerDelete}
-                  >Delete</Button>}
+                title="Musician"
+                avatar={<LibraryMusic />}
+                action={<Button variant="contained" color="error" startIcon={<DeleteForever />} onClick={handleDelete}>Delete</Button>}
               />
               <CardContent>
                 <MusicianForm
                   data={data}
-                  onSave={handlerSave}
+                  onSave={handleSave}
                   setData={setData}
                   openSuccess={openSuccess}
                   setOpenSuccess={setOpenSuccess}

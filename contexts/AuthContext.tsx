@@ -1,13 +1,13 @@
-import { useRouter } from 'next/router';
+import { useRouter } from 'next/router'
 import { createContext, useCallback, useContext, useEffect, useState } from 'react'
-import routes from '../config/routes';
+import routes from '../config/routes'
 
-function parseJwt(token: string) {
+export function parseJwt(token: string) {
     var base64Url = token.split('.')[1];
-    var base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
+    var base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/')
     var jsonPayload = decodeURIComponent(atob(base64).split('').map(function (c) {
-        return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2);
-    }).join(''));
+        return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2)
+    }).join(''))
 
     const model = JSON.parse(jsonPayload)
     model.initData = new Date(Number(model.iat + '000'))
@@ -78,23 +78,50 @@ const AuthProvider = ({ children }: any) => {
         </AuthCtx.Provider>)
 }
 
-export const useIsAuth = () => {
+export const useIsAuth = (roles: string[] = []) => {
+    const [login, setLogin] = useState(false)
     const router = useRouter()
     const { data } = useContext(AuthCtx)
     const authCheck = useCallback(() => {
-        if (data.isLogin === null) return
-        if (!data.isLogin) router.push(routes.home())
-    }, [data, router])
+        if (data.isLogin === null) return false
+        if (data.token.roles && roles.length > 0) {
+            const found = data.token.roles.some((r: string) => roles.indexOf(r) >= 0)
+            if (!found) {
+                router.push(routes.home())
+                return false
+            } else {
+                return true
+            }
+        } else {
+            if (!data.isLogin) {
+                router.push(routes.home())
+                return false
+            } else {
+                return true
+            }
+        }
+    }, [data.isLogin, data.token.roles, roles, router])
 
     useEffect(() => {
-        authCheck()
+        setLogin(authCheck())
     }, [authCheck])
-    return data.isLogin
+    return login
 }
 
 export const useAuth = () => {
     const authData = useContext(AuthCtx)
     return authData
+}
+
+export const useRolesValidation = () => {
+    const valiation = (roles: string[], data: any) => {
+        const token = data.token
+        const isLogin = data.isLogin
+        if (!isLogin) return false
+        const found = token.roles.some((r: string) => roles.indexOf(r) >= 0)
+        return found
+    }
+    return valiation
 }
 
 export default AuthProvider

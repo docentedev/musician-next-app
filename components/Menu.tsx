@@ -5,6 +5,8 @@ import Box from '@mui/material/Box'
 import Toolbar from '@mui/material/Toolbar'
 import Typography from '@mui/material/Typography'
 import Button from '@mui/material/Button'
+import { Logout, AccountBox } from '@mui/icons-material'
+import { IconButton } from '@mui/material'
 import routes from '../config/routes'
 import { useRouter } from 'next/router'
 import { useAuth } from '../contexts/AuthContext'
@@ -32,9 +34,16 @@ const ButtonAppBar = () => {
                         </Link>
                     </Typography>
                     {auth.data.isLogin ? (
-                        <Button color="inherit" onClick={handleLogout}>
-                            Logout
-                        </Button>
+                        <>
+                            <Link href={routes.profile()}>
+                                <IconButton>
+                                    <AccountBox />
+                                </IconButton>
+                            </Link>
+                            <IconButton color="error" onClick={handleLogout}>
+                                <Logout />
+                            </IconButton>
+                        </>
                     ) : (
                         <Link href={routes.authLogin()}>
                             <Button color="inherit">Login</Button>

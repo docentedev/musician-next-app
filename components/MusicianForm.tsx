@@ -7,26 +7,27 @@ import { Alert, Collapse, IconButton } from '@mui/material'
 import CloseIcon from '@mui/icons-material/Close'
 import { DesktopDatePicker } from '@mui/x-date-pickers/DesktopDatePicker'
 import CustomTextField from './CustomField'
+import { Save } from '@mui/icons-material'
 
 const MusicianForm = ({
-  data,
-  onSave,
-  setData,
-  openSuccess,
-  setOpenSuccess
+    data,
+    onSave,
+    setData,
+    openSuccess,
+    setOpenSuccess
 }: any) => {
-  const handleChange = (event: any) => {
-    setData({ ...data, [event.target.name]: event.target.value })
-  }
+    const handleChange = (event: any) => {
+        setData({ ...data, [event.target.name]: event.target.value })
+    }
 
-  return (
+    return (
         <Box
             component="form"
             noValidate
             autoComplete="off"
             onSubmit={(event: any) => {
-              event.preventDefault()
-              onSave()
+                event.preventDefault()
+                onSave()
             }}
         >
             <Grid container spacing={2}>
@@ -51,9 +52,9 @@ const MusicianForm = ({
                 <Grid item xs={12}>
                     <SelectAsynchronous
                         value={{
-                          city_fk: data.city_fk,
-                          city_name: data.city_name,
-                          country_name: data.country_name
+                            city_fk: data.city_fk,
+                            city_name: data.city_name,
+                            country_name: data.country_name
                         }}
                         onChange={(value: any) => setData({ ...data, ...value })}
                     />
@@ -76,42 +77,41 @@ const MusicianForm = ({
                         renderInput={(params) => <TextField {...params} />}
                     />
                 </Grid>
-                <Grid item xs={12}>
-                    {/* Button Save */}
+            </Grid>
+            <Grid container spacing={2} marginTop={1}>
+                <Grid item>
                     <Button
                         variant="contained"
-                        color="primary"
+                        color="success"
                         type="submit"
+                        size="large"
                         disabled={!data.first_name || !data.last_name}
+                        endIcon={<Save />}
                     >
                         Save
                     </Button>
                 </Grid>
-            </Grid>
-            <Grid item xs={12}>
-                <Collapse in={openSuccess}>
-                    <Alert
-                        style={{ marginTop: 10 }}
-                        action={
-                            <IconButton
-                                aria-label="close"
-                                color="inherit"
-                                size="small"
-                                onClick={() => {
-                                  setOpenSuccess(false)
-                                }}
-                            >
-                                <CloseIcon fontSize="inherit" />
-                            </IconButton>
-                        }
-                        sx={{ mb: 2 }}
-                    >
-                        Saved successfully
-                    </Alert>
-                </Collapse>
+                <Grid item>
+                    <Collapse in={openSuccess}>
+                        <Alert
+                            action={
+                                <IconButton
+                                    aria-label="close"
+                                    color="inherit"
+                                    size="small"
+                                    onClick={() => setOpenSuccess(false)}
+                                >
+                                    <CloseIcon fontSize="inherit" />
+                                </IconButton>
+                            }
+                        >
+                            Saved successfully
+                        </Alert>
+                    </Collapse>
+                </Grid>
             </Grid>
         </Box>
-  )
+    )
 }
 
 export default MusicianForm

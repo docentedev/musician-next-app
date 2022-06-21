@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react'
 import { DataGrid } from '@mui/x-data-grid'
 import VisibilityIcon from '@mui/icons-material/Visibility'
 import Link from 'next/link'
+import { useAuth } from '../../contexts/AuthContext'
 
 type TableProps = {
   columns: any[],
@@ -12,10 +13,15 @@ type TableProps = {
   },
   makeActionView?: (data: any) => string
 }
-const getData = async (endpoint: string, queryOptions: any) => {
+const getData = async (endpoint: string, queryOptions: any, auth: any) => {
   const url = endpoint
   const get = async () => {
-    const response = await fetch(`${url}?${new URLSearchParams(queryOptions)}`)
+    const response = await fetch(`${url}?${new URLSearchParams(queryOptions)}`, {
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${auth.data.token.jwt}`
+      },
+    })
     const data = await response.json()
     return data
   }
@@ -23,13 +29,13 @@ const getData = async (endpoint: string, queryOptions: any) => {
   return await get()
 }
 
-const exect = async (endpoint: string, data: any) => {
+const exect = async (endpoint: string, data: any, auth: any) => {
   return await getData(endpoint, {
     size: data.pageSize,
     page: data.page,
     order: data.field,
     sort: data.direction
-  })
+  }, auth)
 }
 
 const appendActions = (columns: any[], makeActionView: any) => {
@@ -53,7 +59,8 @@ const appendActions = (columns: any[], makeActionView: any) => {
   return columns
 }
 
-function TableServerSide (props: TableProps) {
+function TableServerSide(props: TableProps) {
+  const auth = useAuth()
   const [data, setData] = useState({
     loading: true,
     rows: [],
@@ -74,7 +81,11 @@ function TableServerSide (props: TableProps) {
       sort: data.sort,
       field: data.sort.field,
       direction: data.sort.direction
-    }).then((result: any) => {
+    }, auth).then((result: any) => {
+      if (result.error) {
+        setData((d) => ({ ...d, rowCount: 0, totalRows: 0, rows: [], loading: false }))
+        return
+      }
       setData((d) => ({ ...d, rowCount: result.rows.length, totalRows: result.count, rows: result.rows, loading: false }))
     }).catch(() => {
       setData((d) => ({ ...d, rowCount: 0, totalRows: 0, rows: [], loading: false }))

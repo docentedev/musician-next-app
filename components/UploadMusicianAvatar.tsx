@@ -3,6 +3,7 @@ import DeleteForever from '@mui/icons-material/DeleteForever'
 import { useState } from 'react'
 import { styled } from '@mui/material/styles'
 import { useAuth } from '../contexts/AuthContext'
+import { Save, UploadFile } from '@mui/icons-material'
 
 const Input = styled('input')({
   display: 'none'
@@ -74,11 +75,20 @@ const UploadForm = ({
         )}
         <label htmlFor="contained-button-file">
           <Input accept="image/*" id="contained-button-file" onChange={handleFileChange} type="file" />
-          <Button variant="contained" component="span">
+          <Button variant="contained" component="span" endIcon={<UploadFile />}>
             Load File
           </Button>
         </label>
-        <Button type="submit" disabled={!file} variant="contained" color="success">Save</Button>
+        <Button
+          disabled={!file}
+          variant="contained"
+          color="success"
+          size="large"
+          type="submit"
+          endIcon={<Save />}
+        >
+          Save
+        </Button>
       </Stack>
     </form>
   )

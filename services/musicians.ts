@@ -13,7 +13,7 @@ const musicians = (req: NextApiRequest, res: NextApiResponse<any>) => {
             const rows = response.data.rows.map((item: any) => imageUrl(item))
             res.status(response.status).json({ rows, count: response.data.count })
         } catch (error: any) {
-            res.status(500).json({ error: error.message })
+            res.status(500).json({ error: JSON.parse(error.message) })
         }
     }
     const createMusician = async () => {
@@ -21,7 +21,7 @@ const musicians = (req: NextApiRequest, res: NextApiResponse<any>) => {
             const response = await client.post()
             res.status(response.status).json(response.data)
         } catch (error: any) {
-            res.status(500).json({ error: error.message })
+            res.status(500).json({ error: JSON.parse(error.message) })
         }
     }
     const getMusician = async () => {
@@ -29,7 +29,7 @@ const musicians = (req: NextApiRequest, res: NextApiResponse<any>) => {
             const { data, status } = await client.get({ url: `/${req.query.id}` })
             res.status(status).json(imageUrl(data))
         } catch (error: any) {
-            res.status(500).json({ error: error.message })
+            res.status(500).json({ error: JSON.parse(error.message) })
         }
     }
     const deleteById = async () => {
@@ -37,7 +37,7 @@ const musicians = (req: NextApiRequest, res: NextApiResponse<any>) => {
             const { data, status } = await client.delete({ url: `/${req.query.id}` })
             res.status(status).json(data)
         } catch (error: any) {
-            res.status(500).json({ error: error.message })
+            res.status(500).json({ error: JSON.parse(error.message) })
         }
     }
     const updateMusician = async () => {
@@ -45,7 +45,7 @@ const musicians = (req: NextApiRequest, res: NextApiResponse<any>) => {
             const { data, status } = await client.put({ url: `/${req.query.id}`, method: 'PUT' })
             res.status(status).json(data)
         } catch (error: any) {
-            res.status(500).json({ error: error.message })
+            res.status(500).json({ error: JSON.parse(error.message) })
         }
     }
     return {

@@ -12,17 +12,23 @@ import styles from './Layout.module.css'
 import { useAuth } from '../contexts/AuthContext'
 import routes from '../config/routes'
 import { IconButton } from '@mui/material'
+import { AccountBox, Home, LibraryMusic, LocationCity } from '@mui/icons-material'
 
-const ItemLink = ({ currentUrl, text, url, exact = true }: any) => {
+const ItemLink = ({ currentUrl, text, url, exact = true, icon }: any) => {
     return (
         <Link href={url}>
             <a className={styles.resetLink}>
                 <MenuItem
                     selected={exact ? currentUrl === url : currentUrl.startsWith(url)}
+                    style={{
+                        color: (exact ? currentUrl === url : currentUrl.startsWith(url)) ? 'gold' : ''
+                    }}
                 >
-                    <ListItemIcon>
-                        {(exact ? currentUrl === url : currentUrl.startsWith(url)) && <ArrowRightIcon fontSize="small" />}
-                    </ListItemIcon>
+                    {icon && (
+                        <ListItemIcon>
+                            {icon}
+                        </ListItemIcon>
+                    )}
                     <Typography variant="inherit">{text}
                     </Typography>
                 </MenuItem>
@@ -45,9 +51,10 @@ export default function Sidebar() {
             </IconButton>
             <Paper>
                 <MenuList>
-                    <ItemLink currentUrl={router.pathname} text="Home" url={routes.home()} />
-                    {auth.data.isLogin && <ItemLink currentUrl={router.pathname} text="Cities" url={routes.adminCities()} exact={false} />}
-                    {auth.data.isLogin && <ItemLink currentUrl={router.pathname} text="Musicians" url={routes.adminMusicians()} exact={false} />}
+                    <ItemLink icon={<Home fontSize="small" />} currentUrl={router.pathname} text="Home" url={routes.home()} />
+                    {auth.data.isLogin && <ItemLink icon={<LocationCity fontSize="small" />} currentUrl={router.pathname} text="Cities" url={routes.adminCities()} exact={false} />}
+                    {auth.data.isLogin && <ItemLink icon={<LibraryMusic fontSize="small" />} currentUrl={router.pathname} text="Musicians" url={routes.adminMusicians()} exact={false} />}
+                    {auth.data.isLogin && <ItemLink icon={<AccountBox fontSize="small" />} currentUrl={router.pathname} text="Users" url={routes.adminUsers()} exact={false} />}
                 </MenuList>
             </Paper>
         </div >

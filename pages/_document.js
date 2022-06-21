@@ -61,7 +61,7 @@ MyDocument.getInitialProps = async (ctx) => {
         function EnhanceApp(props) {
           return <App emotionCache={cache} {...props} />;
         },
-    });
+    })
   /* eslint-enable */
 
   const initialProps = await Document.getInitialProps(ctx)

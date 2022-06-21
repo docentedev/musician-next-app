@@ -14,9 +14,9 @@ const Musician = ({ initialData }: any) => {
   const [data, setData] = useState(initialData)
   const router = useRouter()
 
-  const isLogin = useIsAuth()
+  const isLogin = useIsAuth(['admin'])
 
-  const handlerSave = async () => {
+  const handleSave = async () => {
     const response = await fetch('/api/musicians', {
       method: 'POST',
       headers: {
@@ -47,7 +47,7 @@ const Musician = ({ initialData }: any) => {
             <Paper style={{ padding: 10, marginBottom: 10 }}>
               <MusicianForm
                 data={data}
-                onSave={handlerSave}
+                onSave={handleSave}
                 setData={setData}
                 openSuccess={openSuccess}
                 setOpenSuccess={setOpenSuccess}

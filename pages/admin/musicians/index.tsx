@@ -10,6 +10,7 @@ import EditIcon from '@mui/icons-material/Edit'
 import { Avatar, CircularProgress } from '@mui/material'
 import { useIsAuth } from '../../../contexts/AuthContext'
 import routes from '../../../config/routes'
+import { LibraryMusic } from '@mui/icons-material'
 
 const columns: GridColDef[] = [
   {
@@ -36,30 +37,33 @@ const tableProps = {
   initialSort: { field: 'id', direction: 'asc' }
 }
 
-const Musicians = () => useIsAuth() ? (
-  <div>
-    <BreadcrumbsSite urls={[
-      { text: 'Home', url: routes.home() },
-      { text: 'Musicians', url: routes.adminMusicians() }
-    ]} />
-    <Card>
-      <CardHeader
-        title="Musicians"
-        action={<NextLink href={routes.adminMusicianCreate()}>
-          <Button
-            variant="contained"
-            color="primary"
-            startIcon={<EditIcon />}
-          >
-            Create
-          </Button>
-        </NextLink>}
-      />
-      <CardContent>
-        <TableServerSide {...tableProps} makeActionView={data => routes.adminMusician(data.row.id)} />
-      </CardContent>
-    </Card>
-  </div>
-) : (<CircularProgress />)
+const Musicians = () => {
+  return useIsAuth(['admin']) ? (
+    <div>
+      <BreadcrumbsSite urls={[
+        { text: 'Home', url: routes.home() },
+        { text: 'Musicians', url: routes.adminMusicians() }
+      ]} />
+      <Card>
+        <CardHeader
+          title="Musicians"
+          avatar={<LibraryMusic />}
+          action={<NextLink href={routes.adminMusicianCreate()}>
+            <Button
+              variant="contained"
+              color="primary"
+              startIcon={<EditIcon />}
+            >
+              Create
+            </Button>
+          </NextLink>}
+        />
+        <CardContent>
+          <TableServerSide {...tableProps} makeActionView={data => routes.adminMusician(data.row.id)} />
+        </CardContent>
+      </Card>
+    </div>
+  ) : (<CircularProgress />)
+}
 
 export default Musicians

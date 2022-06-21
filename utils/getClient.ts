@@ -21,7 +21,7 @@ const getClient = (req: NextApiRequest, baseUrl: string) => {
             method: options.method || 'GET',
             ...headersDefault(req)
         }
-        if (body) { opts.body = body }
+        if (body && body !== '{}') { opts.body = body }
         if (!options.url) { options.url = '' }
         const response = await fetch(`${baseUrl}${options.url}`, opts)
         if (response.status === 200 || response.status === 201) {
@@ -29,8 +29,17 @@ const getClient = (req: NextApiRequest, baseUrl: string) => {
             const model = { data, status: response.status }
             return model
         } else {
+            let message: any = ''
+            try {
+                const text = await response.text()
+                message = text
+                message = JSON.parse(text)
+                if (message.message) {
+                    message = message.message
+                }
+            } catch (_e) { }
             throw new Error(JSON.stringify({
-                message: response.text,
+                message,
                 status: response.status,
             }))
         }

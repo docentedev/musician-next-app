@@ -8,7 +8,7 @@ import InputIcon from '@mui/icons-material/Input'
 import BreadcrumbsSite from '../../../components/BreadcrumbsSite'
 import CustomTextField from '../../../components/CustomField'
 import routes from '../../../config/routes'
-import { useAuth } from '../../../contexts/AuthContext'
+import { parseJwt, useAuth, useRolesValidation } from '../../../contexts/AuthContext'
 import styles from './index.module.css'
 
 const Login = () => {
@@ -19,6 +19,7 @@ const Login = () => {
   })
   const router = useRouter()
   const auth = useAuth()
+  const roleValidation = useRolesValidation()
 
   const handleChange = (event: any) => {
     setUser({ ...user, [event.target.name]: event.target.value })
@@ -36,8 +37,16 @@ const Login = () => {
         body: JSON.stringify(user)
       })
       const json = await response.json()
+      const tokenData = {
+        token: parseJwt(json.token),
+        isLogin: true,
+      }
       auth.setData({ key: 'token', value: json.token })
-      router.push(routes.adminMusicians())
+      if (roleValidation(['admin'], tokenData)) {
+        router.push(routes.adminMusicians())
+      } else {
+        router.push(routes.home())
+      }
       setLoading(false)
     } catch (error) {
       console.log(error)

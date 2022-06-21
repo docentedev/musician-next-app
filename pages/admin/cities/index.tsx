@@ -7,6 +7,7 @@ import { GridColDef } from '@mui/x-data-grid'
 import routes from '../../../config/routes'
 import { useIsAuth } from '../../../contexts/AuthContext'
 import { CircularProgress } from '@mui/material'
+import { LocationCity } from '@mui/icons-material'
 
 const columns: GridColDef[] = [
   { field: 'id', headerName: 'ID' },
@@ -16,14 +17,14 @@ const columns: GridColDef[] = [
 
 const tableProps = { endpoint: '/api/cities', columns, initialSort: { field: 'id', direction: 'asc' } }
 
-const Cities = () => useIsAuth() ? (
+const Cities = () => useIsAuth(['admin']) ? (
   <>
     <BreadcrumbsSite urls={[
       { text: 'Home', url: routes.home() },
       { text: 'Cities', url: routes.adminCities() }
     ]} />
     <Card>
-      <CardHeader title="Cities" />
+      <CardHeader title="Cities" avatar={<LocationCity />} />
       <CardContent>
         <TableServerSide {...tableProps} makeActionView={data => routes.adminCity(data.row.id)} />
       </CardContent>

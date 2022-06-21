@@ -7,7 +7,8 @@ import BreadcrumbsSite from '../../../components/BreadcrumbsSite'
 import makeBaseurl from '../../../utils/makeBaseurl'
 import routes from '../../../config/routes'
 import { useIsAuth } from '../../../contexts/AuthContext'
-import { CircularProgress } from '@mui/material'
+import { Card, CardContent, CardHeader, CircularProgress } from '@mui/material'
+import { LocationCity } from '@mui/icons-material'
 
 const CustomTextField = ({ model, name, label, onChange }: any) => {
   return (
@@ -19,6 +20,7 @@ const CustomTextField = ({ model, name, label, onChange }: any) => {
       margin="normal"
       variant="outlined"
       required
+      fullWidth
       error={model[name] === ''}
     />
   )
@@ -31,36 +33,38 @@ const Musician = ({ initialData }: any) => {
     setData({ ...data, [event.target.name]: event.target.value })
   }
 
-  const isLogin = useIsAuth()
+  const isLogin = useIsAuth(['admin'])
   return data && isLogin
     ? (
-      <div>
+      <>
         <BreadcrumbsSite urls={[
           { text: 'Home', url: routes.home() },
           { text: 'Cities', url: routes.adminCities() },
           { text: data.id, url: routes.adminMusician(data.id) }
         ]} />
-        <Grid container>
-          <Grid item xs={12}>
-            <Paper style={{ padding: 10, marginBottom: 10 }}>
-              <Box
-                component="form"
-                sx={{ '& > :not(style)': { m: 1, width: '25ch' } }}
-                noValidate
-                autoComplete="off"
-              >
+        <Card style={{ marginBottom: 10 }}>
+          <CardHeader title="Cities" avatar={<LocationCity />} />
+          <CardContent component="form" noValidate autoComplete="off">
+            <Grid container spacing={2}>
+              <Grid item xs={6}>
                 <CustomTextField model={data} name="name" label="Name" onChange={handleChange} />
+              </Grid>
+              <Grid item xs={6}>
                 <CustomTextField model={data} name="admin_name" label="Admin Name" onChange={handleChange} />
-              </Box>
-            </Paper>
-          </Grid>
-          <Grid item xs={12}>
-            <Paper style={{ padding: 10 }}>
-              <pre>{JSON.stringify(data, null, 2)}</pre>
-            </Paper>
-          </Grid>
-        </Grid>
-      </div>
+              </Grid>
+            </Grid>
+          </CardContent>
+        </Card>
+        <Card>
+          <CardContent>
+            <Grid container spacing={2}>
+              <Grid item xs={12}>
+                <pre>{JSON.stringify(data, null, 2)}</pre>
+              </Grid>
+            </Grid>
+          </CardContent>
+        </Card>
+      </>
     )
     : (
       <CircularProgress />
